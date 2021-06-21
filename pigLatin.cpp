@@ -2,17 +2,27 @@
 //
 // Created by: Liam Csiffary
 // Date: May June 16, 2021
+// code converts all text to pig latin
 
 #include <iostream>
 #include <list>
-#include<algorithm>
+#include <algorithm>
+#include "YVowels.h"
+
 // did this to avoid annoying error
+using namespace N;
 using std::string;
 using std::list;
 using std::cout;
 using std::cin;
 using std::endl;
 const char WHITESPACE[11] = " \n\r\t\f\v";
+
+
+void welcome() {
+    cout << "Welcome! This code converts text from english to pig latin!\n";
+}
+
 
 // REMOVES ALL WHITE SPACE BEFORE AND AFTER STRING
 
@@ -84,7 +94,7 @@ void splitString(string str, string delimiter = " ") {
 }
 
 // this part does all the moving of the letters
-string Swapper(string word) {
+string Swapper(string word, string y) {
     string letter;
     letter = word[0];
     string saved;
@@ -92,7 +102,7 @@ string Swapper(string word) {
         // as long as the first letter is not a vowel move the
         // start of the word to the back of it
         if (letter == "a" || letter == "e" || letter == "i" ||
-        letter == "o" || letter == "u") {
+        letter == "o" || letter == "u" || letter == y) {
             break;
         } else {
             word = word.substr(1, word.length() - 1) + word.front();
@@ -106,20 +116,35 @@ string Swapper(string word) {
 // this adds the suffixes the capitals as well as calls most of
 // the other functions
 string latinConverter() {
+    string yVow;
     string swapped;
     string letter;
     string suffix;
     string final;
     for (string each : userInput) {
+        yVow = "a";
+        string temp = each;
+        temp.erase(remove(temp.begin(), temp.end(), '.'), temp.end());
+        temp.erase(remove(temp.begin(), temp.end(), ','), temp.end());
+        temp.erase(remove(temp.begin(), temp.end(), ';'), temp.end());
+        temp.erase(remove(temp.begin(), temp.end(), '!'), temp.end());
+        temp.erase(remove(temp.begin(), temp.end(), '?'), temp.end());
+        temp.erase(remove(temp.begin(), temp.end(), ':'), temp.end());
+        for (string oddWord : yVowelWords) {
+            if (oddWord == temp) {
+                yVow = "y";
+            }
+        }
+
         swapped = each;
         letter = swapped[0];
         // if word already starts with a vowel add way to the end
         if (letter == "a" || letter == "e" || letter == "i"
-        || letter == "o" || letter == "u") {
+        || letter == "o" || letter == "u" || letter == yVow) {
             suffix = "way";
         } else {
             // otherwise call the function and add ay to the end
-            swapped = Swapper(swapped);
+            swapped = Swapper(swapped, yVow);
             suffix = "ay";
         }
         // adds the suffix
@@ -162,6 +187,7 @@ string latinConverter() {
 }
 
 int main() {
+    welcome();
     string sentence;
     string final;
     cout << "What would you like to convert to pig latin: ";
